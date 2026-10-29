@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGARO Product Catalogue 2026</title>
+<style>
+:root {
+  --bg: #0f1419;
+  --card: #1a2332;
+  --accent: #c9a87c;
+  --accent-dark: #a88b5e;
+  --text: #e8e6e3;
+  --muted: #8b9bb4;
+  --border: #2a3544;
+  --success: #4ade80;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+header {
+  background: #0f1419;
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+header h1 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
+.controls {
+  padding: 1.5rem 2rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  background: #121820;
+  border-bottom: 1px solid var(--border);
+}
+.search-box, .filter-select {
+  padding: 0.7rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+.search-box { flex: 1; min-width: 200px; }
+.filter-select { min-width: 180px; }
+.stats {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+.products {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.product-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.product-img {
+  height: 180px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.product-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.product-img .placeholder {
+  font-size: 3rem;
+  color: var(--accent);
+  display: none;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}.product-info { padding: 1.2rem; }
+.product-code {
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.product-name {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0.4rem 0 0.8rem;
+  line-height: 1.3;
+}
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+.mrp {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.dp {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--success);
+}
+.meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.8rem;
+}
+.badge {
+  display: inline-block;
+  background: rgba(201,168,124,0.15);
+  color: var(--accent);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+}
+.category-tag {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AGARO · Product Catalogue 2026</h1>
+</header>
+<div class="controls">
+  <input type="text" class="search-box" id="search" placeholder="Search by name or item code..." oninput="filterProducts()">
+  <select class="filter-select" id="categoryFilter" onchange="filterProducts()">
+    <option value="all">All Categories</option>
+  </select>
+  <div class="stats" id="stats"></div>
+</div>
+<div class="products" id="products"></div>
+<footer>AGARO Product Catalogue · Prices as per Sept 2026 Price List · RLP displayed as DP</footer>
+
+<script>
+const PRODUCTS = [
+  // Electric Kettles
+  {code:"34207A", name:"AGARO Sonnet Electric Kettle 1.5L", mrp:1299, rlp:750, gst:"18%", markdown:42, category:"Electric Kettle", bundle:false},
+  {code:"33897A", name:"AGARO Elegant Double Layer Kettle 1.8L", mrp:1999, rlp:905, gst:"18%", markdown:55, category:"Electric Kettle", bundle:true},
+  {code:"33874A", name:"AGARO Regency Multi Kettle 1.2L", mrp:2499, rlp:1565, gst:"18%", markdown:37, category:"Electric Kettle", bundle:true},
+  {code:"33956", name:"AGARO Galaxy Glass Kettle 1.5L", mrp:2499, rlp:1391, gst:"18%", markdown:44, category:"Electric Kettle", bundle:false},
+  {code:"34146", name:"AGARO Delite Portable Electric Kettle", mrp:3499, rlp:2174, gst:"18%", markdown:38, category:"Electric Kettle", bundle:false},
+
+  // OTG
+  {code:"33266A", name:"AG Marvel OTG - 9L - Black", mrp:2799, rlp:1826, gst:"18%", markdown:35, category:"OTG", bundle:false},
+  {code:"33184A", name:"AG Marvel OTG - 25L - Black", mrp:8495, rlp:4349, gst:"18%", markdown:49, category:"OTG", bundle:true},
+  {code:"33310A", name:"AG Marvel OTG - 48L - Black", mrp:9999, rlp:6959, gst:"18%", markdown:30, category:"OTG", bundle:true},
+
+  // Air Fryers
+  {code:"34028", name:"AGARO Galaxy Digital Air Fryer 4.5L", mrp:7995, rlp:3528, gst:"18%", markdown:56, category:"Air Fryer", bundle:false},
+  {code:"33896", name:"AGARO Elegant Digital Air Fryer 6.5L", mrp:13995, rlp:6888, gst:"18%", markdown:51, category:"Air Fryer", bundle:false},
+  {code:"33684", name:"AGARO Regency Air Fryer, 12L", mrp:19995, rlp:9259, gst:"18%", markdown:54, category:"Air Fryer", bundle:false},
+  {code:"34003", name:"AGARO Regal Plus Digital Air Fryer 23L", mrp:25995, rlp:12179, gst:"18%", markdown:53, category:"Air Fryer", bundle:false},
+
+  // Blenders & Mixers
+  {code:"34119", name:"AGARO Galaxy Portable Blender", mrp:3499, rlp:2112, gst:"18%", markdown:40, category:"Blender", bundle:true},
+  {code:"34011", name:"AGARO Regal 3 Jar Personal Blender 400W", mrp:3490, rlp:2015, gst:"18%", markdown:42, category:"Blender", bundle:true},
+  {code:"33555", name:"AGARO Grand Professional Blender 2000W", mrp:12995, rlp:4784, gst:"18%", markdown:63, category:"Blender", bundle:false},
+  {code:"33772", name:"AGARO Elegant Stand Mixer, 1400W Black", mrp:17990, rlp:6959, gst:"18%", markdown:61, category:"Mixer", bundle:false},
+
+  // Juicers
+  {code:"34279", name:"AGARO Regal Electric Citrus Juicer", mrp:3999, rlp:2087, gst:"18%", markdown:48, category:"Juicer", bundle:false},
+  {code:"34490", name:"AG Regal Cold Press Slow Juicer - 250 Watt", mrp:18995, rlp:9035, gst:"18%", markdown:52, category:"Juicer", bundle:false},
+  {code:"33847", name:"AGARO Royal Slow Juicer 240W", mrp:39990, rlp:17115, gst:"18%", markdown:57, category:"Juicer", bundle:false},
+
+  // Rice Cookers
+  {code:"33957", name:"AGARO Elegant Electric Rice Cooker 1L", mrp:2999, rlp:1938, gst:"18%", markdown:35, category:"Rice Cooker", bundle:false},
+  {code:"33876", name:"AGARO Regency Electric Rice Cooker 5L", mrp:4490, rlp:2976, gst:"18%", markdown:34, category:"Rice Cooker", bundle:false},
+  {code:"33426", name:"AGARO Imperial Electric Pressure Cooker 6L", mrp:11999, rlp:8264, gst:"18%", markdown:31, category:"Pressure Cooker", bundle:false},
+
+  // Vacuum Cleaners
+  {code:"33424", name:"AGARO Icon Bagless Vacuum Cleaner 2000W", mrp:8999, rlp:5667, gst:"18%", markdown:37, category:"Vacuum Cleaner", bundle:false},
+  {code:"33830", name:"AGARO Supreme Cordless Stick Vacuum Cleaner", mrp:29990, rlp:13273, gst:"18%", markdown:56, category:"Vacuum Cleaner", bundle:false},
+  {code:"34074", name:"AGARO Alpha Robot Vacuum Cleaner", mrp:44990, rlp:15680, gst:"18%", markdown:65, category:"Vacuum Cleaner", bundle:false},
+
+  // Personal Care - Hair
+  {code:"34433", name:"AG Elite BLDC Hair Dryer - 1600W", mrp:7995, rlp:2595, gst:"18%", markdown:68, category:"Hair Dryer", bundle:false},
+  {code:"33628", name:"AGARO HV2179 Volumizer Hair Dryer", mrp:3999, rlp:1730, gst:"18%", markdown:57, category:"Hair Dryer", bundle:true},
+  {code:"34195", name:"AGARO Elite Hair Straightener", mrp:2199, rlp:1297, gst:"18%", markdown:41, category:"Hair Straightener", bundle:false},
+
+  // Car Accessories
+  {code:"33737", name:"AGARO Car Vacuum Cleaner CV1077", mrp:2299, rlp:1189, gst:"18%", markdown:48, category:"Car Accessories", bundle:false},
+  {code:"34068", name:"AGARO Galaxy Portable Tyre Inflator", mrp:4499, rlp:1619, gst:"18%", markdown:64, category:"Car Accessories", bundle:false},
+  {code:"34312", name:"AG Primo Car Jump Starter - 12000mAh", mrp:9999, rlp:4249, gst:"18%", markdown:58, category:"Car Accessories", bundle:false},
+
+  // Massagers
+  {code:"33158", name:"AGARO Foot Massager", mrp:9495, rlp:4225, gst:"5%", markdown:56, category:"Massager", bundle:false},
+  {code:"34308", name:"AGARO Elite Air Compress Foot Massager", mrp:19999, rlp:7060, gst:"5%", markdown:65, category:"Massager", bundle:false},
+  {code:"33864", name:"Agaro Massage Chair - MC 8012 Brown", mrp:389000, rlp:147029, gst:"5%", markdown:62, category:"Massager", bundle:false},
+
+  // Cookware samples
+  {code:"33973", name:"AGARO Elite Hard Anodised Tawa 25 cm", mrp:1200, rlp:660, gst:"5%", markdown:45, category:"Cookware", bundle:false},
+  {code:"33966", name:"AGARO Regency Triply Steel Kadai with Lid 24cm", mrp:3310, rlp:1655, gst:"5%", markdown:50, category:"Cookware", bundle:false},
+  {code:"34530", name:"AGARO Regency Triply Handi 3.5Ltr with Glass Lid", mrp:3880, rlp:1940, gst:"5%", markdown:50, category:"Cookware", bundle:false},
+
+  // Glassware samples
+  {code:"34373", name:"AGARO Elite Borosilicate Magic Tea Pot", mrp:3499, rlp:1924, gst:"18%", markdown:45, category:"Glassware", bundle:false},
+  {code:"34038", name:"AGARO Elite Borosilicate Glass Tumbler 255ml Pack of 6", mrp:599, rlp:333, gst:"18%", markdown:44, category:"Glassware", bundle:false},
+  {code:"34147", name:"AGARO Elite Double Wall Glass Cup Pack of 2", mrp:899, rlp:494, gst:"18%", markdown:45, category:"Glassware", bundle:false},
+
+  // Additional Kettles
+  {code:"33333A", name:"AG Esteem Multi Kettle 1.2L", mrp:1499, rlp:1016, gst:"18%", markdown:32, category:"Electric Kettle", bundle:false},
+  {code:"33898", name:"AGARO Elite Manual Goose Neck Kettle 0.6L", mrp:2499, rlp:1148, gst:"5%", markdown:54, category:"Electric Kettle", bundle:false},
+  {code:"34121", name:"AGARO Elite Glass Kettle 1200ml", mrp:899, rlp:494, gst:"18%", markdown:45, category:"Electric Kettle", bundle:false},
+  {code:"34373", name:"AGARO Elite Borosilicate Magic Tea Pot", mrp:3499, rlp:1924, gst:"18%", markdown:45, category:"Electric Kettle", bundle:false},
+  {code:"34399", name:"AGARO Elite Borosilicate Glass Kettle 600ml", mrp:1999, rlp:1099, gst:"18%", markdown:45, category:"Electric Kettle", bundle:false},
+
+  // Additional Air Fryers
+  {code:"33846", name:"AGARO REGAL Digital Air Fryer 23L", mrp:22995, rlp:10864, gst:"18%", markdown:53, category:"Air Fryer", bundle:false},
+
+  // Hand Blenders
+  {code:"34001", name:"AGARO Regency Hand Blender 600W", mrp:2499, rlp:1478, gst:"18%", markdown:41, category:"Hand Blender", bundle:false},
+  {code:"33636", name:"AGARO Grand 1000 Watts Hand Blender", mrp:3499, rlp:1913, gst:"18%", markdown:45, category:"Hand Blender", bundle:false},
+  {code:"33635", name:"AGARO Grand 1000 Watts Hand Blender With Chopper", mrp:4499, rlp:2464, gst:"18%", markdown:45, category:"Hand Blender", bundle:false},
+
+  // Mixers
+  {code:"34329", name:"AGARO Regency Hand Mixer 300W", mrp:1995, rlp:1348, gst:"18%", markdown:32, category:"Mixer", bundle:false},
+  {code:"33707", name:"AGARO Hand Mixer Elegant", mrp:2295, rlp:1522, gst:"18%", markdown:34, category:"Mixer", bundle:false},
+  {code:"33554", name:"AG Royal Stand Mixer 1000W", mrp:11495, rlp:6148, gst:"18%", markdown:47, category:"Mixer", bundle:false},
+
+  // Choppers
+  {code:"34036", name:"AGARO Elite Mini Electric Chopper", mrp:1499, rlp:521, gst:"18%", markdown:65, category:"Chopper", bundle:true},
+  {code:"33712", name:"AGARO Elegant Vegetable Chopper", mrp:2699, rlp:1391, gst:"18%", markdown:48, category:"Chopper", bundle:true},
+  {code:"34228", name:"AGARO Delite Vegetable & Meat Chopper", mrp:2899, rlp:1870, gst:"18%", markdown:36, category:"Chopper", bundle:true},
+
+  // Coffee
+  {code:"34052", name:"AGARO Royal Milk Frother", mrp:999, rlp:521, gst:"18%", markdown:48, category:"Coffee", bundle:true},
+  {code:"33698", name:"AGARO Grand Coffee Grinder", mrp:2499, rlp:1261, gst:"18%", markdown:50, category:"Coffee", bundle:false},
+  {code:"33813", name:"AGARO Elite Manual Coffee Grinder", mrp:2999, rlp:1043, gst:"18%", markdown:65, category:"Coffee", bundle:false},
+  {code:"33760", name:"AGARO Royal Drip Coffee Maker 750W", mrp:2499, rlp:1736, gst:"18%", markdown:31, category:"Coffee", bundle:false},
+  {code:"33759", name:"AGARO Imperial Espresso Coffee Maker 1100W", mrp:16990, rlp:8376, gst:"18%", markdown:51, category:"Coffee", bundle:true},
+  {code:"33936", name:"AGARO Delite French Press Coffee Maker", mrp:1799, rlp:608, gst:"18%", markdown:66, category:"Coffee", bundle:false},
+  {code:"33867", name:"AGARO Classic Moka Pot Al", mrp:1299, rlp:673, gst:"5%", markdown:48, category:"Coffee", bundle:false},
+
+  // Rice Cookers
+  {code:"33958", name:"AGARO Marvel Electric Rice Cooker 1.8L", mrp:3390, rlp:2398, gst:"18%", markdown:29, category:"Rice Cooker", bundle:false},
+  {code:"33959", name:"AGARO Regal Electric Multi Cooking Pot 3L", mrp:4990, rlp:2373, gst:"18%", markdown:52, category:"Rice Cooker", bundle:false},
+  {code:"33607", name:"AGARO REGAL Electric Rice Cooker 3L", mrp:5495, rlp:4138, gst:"18%", markdown:25, category:"Rice Cooker", bundle:false},
+  {code:"33877", name:"AGARO Royal Electric Rice Cooker 5L", mrp:5990, rlp:3591, gst:"18%", markdown:40, category:"Rice Cooker", bundle:false},
+  {code:"34280", name:"AGARO Regency Electric Rice Cooker 5L", mrp:6990, rlp:4436, gst:"18%", markdown:37, category:"Rice Cooker", bundle:false},
+  {code:"33875", name:"AGARO Imperial Electric Rice Cooker 2L", mrp:7990, rlp:3914, gst:"18%", markdown:51, category:"Rice Cooker", bundle:false},
+  {code:"33426", name:"AGARO Imperial Electric Pressure Cooker 6L", mrp:11999, rlp:8264, gst:"18%", markdown:31, category:"Pressure Cooker", bundle:false},
+  {code:"33872", name:"AGARO Imperial Electric Pressure Cooker 8L", mrp:13990, rlp:9514, gst:"18%", markdown:32, category:"Pressure Cooker", bundle:false},
+
+  // Breakfast
+  {code:"34337", name:"AGARO Primo Sandwich Maker 750W", mrp:1499, rlp:1130, gst:"18%", markdown:25, category:"Breakfast", bundle:true},
+  {code:"33761", name:"AGARO Grand Egg & Poacher Boiler", mrp:2199, rlp:1004, gst:"18%", markdown:54, category:"Breakfast", bundle:true},
+  {code:"34336", name:"AGARO Royal Grill Sandwich Maker 1000W", mrp:2699, rlp:1652, gst:"18%", markdown:39, category:"Breakfast", bundle:true},
+  {code:"33998", name:"AGARO Elite Soup Maker 1000ML", mrp:7999, rlp:4784, gst:"18%", markdown:40, category:"Breakfast", bundle:false},
+
+  // Ice Makers
+  {code:"34375", name:"AG Marvel Ice Maker - 1.2L", mrp:16995, rlp:6425, gst:"18%", markdown:62, category:"Ice Maker", bundle:false},
+  {code:"34376", name:"AG Regal Ice Maker - 1.2L", mrp:17995, rlp:7829, gst:"18%", markdown:56, category:"Ice Maker", bundle:false},
+  {code:"34377", name:"AG Galaxy Ice Maker - 3.2L", mrp:29995, rlp:14789, gst:"18%", markdown:51, category:"Ice Maker", bundle:false},
+
+  // Yogurt & More
+  {code:"34495", name:"AG Greek Yogurt Maker & Curd Strainer", mrp:895, rlp:521, gst:"5%", markdown:42, category:"Yogurt", bundle:false},
+  {code:"33603", name:"AG Classic Yogurt Maker", mrp:1295, rlp:605, gst:"18%", markdown:53, category:"Yogurt", bundle:false},
+  {code:"34122", name:"AGARO Regency Automatic Nut Milk Maker", mrp:6999, rlp:3914, gst:"18%", markdown:44, category:"Nut Milk", bundle:false},
+  {code:"34061", name:"AGARO Regal Food Dehydrator 5 Racks", mrp:6999, rlp:4758, gst:"18%", markdown:32, category:"Dehydrator", bundle:false},
+
+  // Knives & Tools
+  {code:"33410", name:"AG 3 Set Multifunction SS Knife", mrp:429, rlp:260, gst:"18%", markdown:39, category:"Knives", bundle:false},
+  {code:"34368", name:"AG Royal 3in1 Kitchen Knife Set", mrp:799, rlp:608, gst:"18%", markdown:24, category:"Knives", bundle:false},
+  {code:"33519", name:"AG Royal Knife Set of 6pcs SS Black", mrp:2299, rlp:834, gst:"18%", markdown:64, category:"Knives", bundle:false},
+  {code:"33518", name:"AG Royal Knife Set of 6pcs SS Multi Color", mrp:2499, rlp:939, gst:"18%", markdown:62, category:"Knives", bundle:false},
+  {code:"33520", name:"AG Grand 17 Pcs Kitchen Knifes Set", mrp:4599, rlp:2373, gst:"18%", markdown:48, category:"Knives", bundle:false},
+  {code:"34149", name:"AGARO Elite Salad Spinner", mrp:1799, rlp:869, gst:"18%", markdown:52, category:"Kitchen Tools", bundle:false},
+
+  // Spatulas
+  {code:"34035", name:"AGARO Delux Silicone Spatula Set of 2 Red", mrp:399, rlp:217, gst:"18%", markdown:46, category:"Spatulas", bundle:false},
+  {code:"34034", name:"AGARO Delux Silicone Spatula Set of 3 Black", mrp:599, rlp:321, gst:"18%", markdown:46, category:"Spatulas", bundle:false},
+  {code:"34212", name:"AGARO Royal Silicone Spatula Set of 3 Ivory", mrp:799, rlp:373, gst:"18%", markdown:53, category:"Spatulas", bundle:false},
+  {code:"34014", name:"AGARO Delux Silicone Spatula Set of 6 Red", mrp:899, rlp:399, gst:"18%", markdown:56, category:"Spatulas", bundle:false},
+  {code:"34211", name:"AGARO Royal Silicone Spatula Set of 5 Grey", mrp:1199, rlp:652, gst:"18%", markdown:46, category:"Spatulas", bundle:false},
+
+  // Vacuums & Cleaning
+  {code:"33424", name:"AGARO Icon Bagless Vacuum Cleaner 2000W", mrp:8999, rlp:5667, gst:"18%", markdown:37, category:"Vacuum Cleaner", bundle:false},
+  {code:"33830", name:"AGARO Supreme Cordless Stick Vacuum Cleaner", mrp:29990, rlp:13273, gst:"18%", markdown:56, category:"Vacuum Cleaner", bundle:false},
+  {code:"33993", name:"AGARO Grand Bed Vacuum Cleaner with UV", mrp:7499, rlp:4362, gst:"18%", markdown:42, category:"Vacuum Cleaner", bundle:false},
+  {code:"33288", name:"AG Regal Hand held Vacuum Cleaner 800W", mrp:2999, rlp:1747, gst:"18%", markdown:42, category:"Vacuum Cleaner", bundle:true},
+  {code:"34233", name:"AGARO Delite Electric Glass Vacuum Cleaner", mrp:4999, rlp:2261, gst:"18%", markdown:55, category:"Vacuum Cleaner", bundle:false},
+  {code:"33849", name:"AGARO LR2007 Rechargeable Lint Remover", mrp:1499, rlp:695, gst:"18%", markdown:54, category:"Lint Remover", bundle:false},
+  {code:"33529", name:"AG Lint Remover Rechargeable", mrp:1199, rlp:782, gst:"18%", markdown:35, category:"Lint Remover", bundle:false},
+
+  // Hair Dryers
+  {code:"33531", name:"AGARO HD1211 hair dryer 1100 watts", mrp:899, rlp:657, gst:"18%", markdown:27, category:"Hair Dryer", bundle:true},
+  {code:"34096", name:"AGARO HD1177 Hair Dryer 1000W", mrp:849, rlp:610, gst:"18%", markdown:28, category:"Hair Dryer", bundle:false},
+  {code:"33532", name:"AGARO HD 1120 hair dryer 2000 watts", mrp:2595, rlp:1297, gst:"18%", markdown:50, category:"Hair Dryer", bundle:false},
+  {code:"34393", name:"AG AC Professional Hair Dryer with Comb 2000W", mrp:2599, rlp:1328, gst:"18%", markdown:49, category:"Hair Dryer", bundle:false},
+  {code:"34433", name:"AG Elite BLDC Hair Dryer 1600W", mrp:7995, rlp:2595, gst:"18%", markdown:68, category:"Hair Dryer", bundle:false},
+  {code:"34142", name:"AGARO HD1417 Wall Mounted Hair Dryer 1400W", mrp:1995, rlp:1038, gst:"18%", markdown:48, category:"Hair Dryer", bundle:false},
+];
+
+const categoryIcons = {
+  "Electric Kettle": "🫖",
+  "OTG": "🔥",
+  "Air Fryer": "🍟",
+  "Blender": "🥤",
+  "Hand Blender": "🔪",
+  "Mixer": "🥣",
+  "Juicer": "🍊",
+  "Chopper": "✂️",
+  "Coffee": "☕",
+  "Rice Cooker": "🍚",
+  "Pressure Cooker": "🍲",
+  "Breakfast": "🥪",
+  "Ice Maker": "🧊",
+  "Yogurt": "🥛",
+  "Nut Milk": "🥜",
+  "Dehydrator": "🍎",
+  "Knives": "🔪",
+  "Kitchen Tools": "🥄",
+  "Spatulas": "🥄",
+  "Vacuum Cleaner": "🧹",
+  "Hair Dryer": "💨",
+  "Hair Straightener": "✨",
+  "Car Accessories": "🚗",
+  "Massager": "💆",
+  "Cookware": "🍳",
+  "Glassware": "🥃"
+};
+
+function populateCategories() {
+  const cats = [...new Set(PRODUCTS.map(p => p.category))].sort();
+  const sel = document.getElementById("categoryFilter");
+  cats.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = c;
+    sel.appendChild(opt);
+  });
+}
+
+function filterProducts() {
+  const q = document.getElementById("search").value.toLowerCase();
+  const cat = document.getElementById("categoryFilter").value;
+  const filtered = PRODUCTS.filter(p => {
+    const matchQ = p.name.toLowerCase().includes(q) || p.code.toLowerCase().includes(q);
+    const matchCat = cat === "all" || p.category === cat;
+    return matchQ && matchCat;
+  });
+  renderProducts(filtered);
+}
+
+function renderProducts(list) {
+  const container = document.getElementById("products");
+  const stats = document.getElementById("stats");
+  stats.textContent = list.length + " products";
+  container.innerHTML = list.map(p => `
+    <div class="product-card">
+      <div class="product-img">
+        <img src="${p.code}.jpg" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder" style="display:none; width:100%; height:100%; align-items:center; justify-content:center;">${categoryIcons[p.category] || "📦"}</div>
+      </div>
+      <div class="product-info">
+        <div class="category-tag">${p.category}</div>
+        <div class="product-code">${p.code}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="price-row">
+          <span class="mrp">MRP ₹${p.mrp.toLocaleString("en-IN")}</span>
+          <span class="dp">DP ₹${p.rlp.toLocaleString("en-IN")}</span>
+        </div>
+        <div class="meta">
+          <span>GST ${p.gst}</span>
+          <span>${p.markdown}% off</span>
+          ${p.bundle ? '<span class="badge">Bundle</span>' : ""}
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+window.onload = () => {
+  populateCategories();
+  renderProducts(PRODUCTS);
+};
+</script>
+</body>
+</html>
